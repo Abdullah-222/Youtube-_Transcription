@@ -1,0 +1,12 @@
+fastapi
+uvicorn
+langchain
+langchain-community
+langchain-core
+langchain-text-splitters
+langchain-google-genai
+langchain-chroma
+chromadb
+python-dotenv
+youtube-transcript-api
+google-generativeai
