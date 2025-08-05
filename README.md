@@ -1,12 +1,12 @@
 # YouTube Video Q&A Tool
 
-A powerful AI-powered tool that allows users to ask questions about YouTube videos by analyzing their transcripts. Built with Next.js frontend and FastAPI backend.
+A powerful AI-powered tool that allows users to ask questions about YouTube videos by analyzing their transcripts. Built with Next.js frontend and FastAPI backend, using Pinecone for cloud-based vector storage.
 
 ## 🚀 Features
 
 - **YouTube Video Processing**: Extract transcripts from any YouTube video
 - **AI-Powered Q&A**: Ask natural language questions about video content
-- **Fast Queries**: Optimized vector storage for quick responses
+- **Cloud Vector Storage**: Scalable Pinecone vector database for fast queries
 - **Modern UI**: Clean, responsive interface with real-time status
 - **Error Handling**: Comprehensive error recovery and user feedback
 - **Caching**: Persistent vector stores for faster subsequent queries
@@ -22,7 +22,7 @@ A powerful AI-powered tool that allows users to ask questions about YouTube vide
 ### Backend (FastAPI)
 - **Python FastAPI** server
 - **Google Generative AI** for embeddings and text generation
-- **ChromaDB** for vector storage
+- **Pinecone** for cloud-based vector storage
 - **YouTube Transcript API** for caption extraction
 
 ## 📦 Installation
@@ -31,6 +31,7 @@ A powerful AI-powered tool that allows users to ask questions about YouTube vide
 - Node.js 18+
 - Python 3.8+
 - Google API Key for Gemini models
+- Pinecone API Key for vector storage
 
 ### Quick Start
 
@@ -50,6 +51,9 @@ npm run install:all
 # Create .env file in backend directory
 cd backend
 echo "GOOGLE_API_KEY=your_google_api_key_here" > .env
+echo "PINECONE_API_KEY=your_pinecone_api_key_here" >> .env
+echo "PINECONE_ENVIRONMENT=gcp-starter" >> .env
+echo "PINECONE_INDEX_NAME=youtube-qa-index" >> .env
 ```
 
 4. **Start both servers**
@@ -69,6 +73,9 @@ npm run dev
 **Backend (.env)**
 ```env
 GOOGLE_API_KEY=your_google_api_key_here
+PINECONE_API_KEY=your_pinecone_api_key_here
+PINECONE_ENVIRONMENT=gcp-starter
+PINECONE_INDEX_NAME=youtube-qa-index
 ```
 
 **Frontend (.env.local)**
@@ -76,11 +83,18 @@ GOOGLE_API_KEY=your_google_api_key_here
 NEXT_PUBLIC_API_URL=http://localhost:8000
 ```
 
-### Google API Setup
+### API Setup
 
-1. Go to [Google AI Studio](https://makersuite.google.com/app/apikey)
-2. Create a new API key
-3. Add the key to your backend `.env` file
+1. **Google API Setup**
+   - Go to [Google AI Studio](https://makersuite.google.com/app/apikey)
+   - Create a new API key
+   - Add the key to your backend `.env` file
+
+2. **Pinecone Setup**
+   - Go to [Pinecone Console](https://app.pinecone.io/)
+   - Create a new API key
+   - Note your environment (e.g., `gcp-starter`)
+   - Add the key and environment to your backend `.env` file
 
 ## 🎯 Usage
 
@@ -114,15 +128,15 @@ Content-Type: application/json
 }
 ```
 
-### List Vector Stores
+### Pinecone Statistics
 ```http
-GET /vector-stores
+GET /pinecone-stats
 ```
 
 ## 🚀 Performance Optimizations
 
 ### Backend
-- **Vector Caching**: Each video gets a unique vector store
+- **Vector Caching**: Each video gets a unique namespace in Pinecone
 - **Chunking**: 200-character chunks with 50-character overlap
 - **Retrieval**: Top-3 most relevant chunks for context
 - **Error Recovery**: Comprehensive error handling
@@ -141,9 +155,10 @@ Transcription_Tool/
 │   ├── app/
 │   │   ├── chains/         # AI processing logic
 │   │   ├── models/         # Data schemas
+│   │   ├── pinecone_config.py  # Pinecone configuration
 │   │   └── main.py         # FastAPI application
 │   ├── requirements.txt    # Python dependencies
-│   └── vector_stores/      # Cached embeddings
+│   └── .env               # Environment variables
 ├── frontend/               # Next.js frontend
 │   ├── src/
 │   │   ├── app/           # Next.js App Router
@@ -210,6 +225,7 @@ npm run test
 1. **Backend Connection Error**
    - Check if backend is running on port 8000
    - Verify Google API key is set correctly
+   - Verify Pinecone API key is set correctly
    - Check CORS settings
 
 2. **Video Processing Fails**
@@ -217,7 +233,12 @@ npm run test
    - Check video is publicly accessible
    - Verify YouTube URL format
 
-3. **Slow Response Times**
+3. **Pinecone Connection Issues**
+   - Verify Pinecone API key is correct
+   - Check environment setting matches your Pinecone environment
+   - Ensure index name is unique
+
+4. **Slow Response Times**
    - First-time processing takes longer due to vector creation
    - Subsequent queries use cached embeddings
    - Check internet connection for API calls
@@ -238,5 +259,5 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 - **Google Generative AI** for powerful language models
 - **YouTube Transcript API** for caption extraction
-- **ChromaDB** for vector storage
+- **Pinecone** for cloud-based vector storage
 - **Next.js** and **FastAPI** for the excellent frameworks 

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h2>YouTube AI Assistant</h2>
+      <div id="video-info" class="video-info hidden">
+        <p id="video-title"></p>
+        <p id="video-url"></p>
+      </div>
+    </div>
+    
+    <div class="chat-container">
+      <div id="messages" class="messages"></div>
+      <div class="input-container">
+        <textarea id="question-input" placeholder="Ask about this video..."></textarea>
+        <button id="send-btn">Send</button>
+      </div>
+    </div>
+    
+    <div class="actions">
+      <button id="analyze-btn" class="primary">Analyze Current Video</button>
+      <button id="clear-btn">Clear Chat</button>
+    </div>
+  </div>
+    <script src="../content-scripts/shared/api-client.js"></script>
+    <script src="popup.js"></script>
+</body>
+</html>

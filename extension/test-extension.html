@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Extension Test Page</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ccc; border-radius: 5px; }
+        .success { background-color: #d4edda; border-color: #c3e6cb; }
+        .error { background-color: #f8d7da; border-color: #f5c6cb; }
+        button { padding: 10px 15px; margin: 5px; background: #007bff; color: white; border: none; border-radius: 3px; cursor: pointer; }
+        button:hover { background: #0056b3; }
+    </style>
+</head>
+<body>
+    <h1>YouTube AI Assistant Extension Test</h1>
+    
+    <div class="test-section">
+        <h3>Extension Installation Test</h3>
+        <p>If you can see this page and the extension icon in your browser toolbar, the extension is installed correctly.</p>
+        <button onclick="testExtension()">Test Extension Connection</button>
+        <div id="extension-test-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>Backend Connection Test</h3>
+        <p>This will test if the extension can connect to your backend server.</p>
+        <button onclick="testBackend()">Test Backend Connection</button>
+        <div id="backend-test-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>YouTube Video Detection Test</h3>
+        <p>Navigate to a YouTube video page and click this button to test video detection.</p>
+        <button onclick="testVideoDetection()">Test Video Detection</button>
+        <div id="video-test-result"></div>
+    </div>
+
+    <script>
+        async function testExtension() {
+            const resultDiv = document.getElementById('extension-test-result');
+            try {
+                // Test if extension is available
+                if (typeof chrome !== 'undefined' && chrome.runtime) {
+                    resultDiv.innerHTML = '<div class="success">✅ Extension is properly installed and accessible!</div>';
+                } else {
+                    resultDiv.innerHTML = '<div class="error">❌ Extension is not accessible from this page.</div>';
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="error">❌ Error testing extension: ${error.message}</div>`;
+            }
+        }
+
+        async function testBackend() {
+            const resultDiv = document.getElementById('backend-test-result');
+            try {
+                const response = await fetch('http://localhost:8000/health');
+                const data = await response.json();
+                resultDiv.innerHTML = `<div class="success">✅ Backend is running! Status: ${data.status}</div>`;
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="error">❌ Backend connection failed: ${error.message}</div>`;
+            }
+        }
+
+        async function testVideoDetection() {
+            const resultDiv = document.getElementById('video-test-result');
+            try {
+                // This will only work on YouTube pages
+                if (window.location.href.includes('youtube.com')) {
+                    resultDiv.innerHTML = '<div class="success">✅ You are on a YouTube page. The extension should detect videos automatically.</div>';
+                } else {
+                    resultDiv.innerHTML = '<div class="error">❌ This is not a YouTube page. Navigate to a YouTube video to test video detection.</div>';
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="error">❌ Error testing video detection: ${error.message}</div>`;
+            }
+        }
+
+        // Auto-run tests when page loads
+        window.addEventListener('load', () => {
+            testExtension();
+            testBackend();
+        });
+    </script>
+</body>
+</html> 
